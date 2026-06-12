@@ -3,7 +3,7 @@ import axios from 'axios'
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import ExportPDF from './ExportPDF'
 
-const API = 'http://localhost:5000'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 const COLORS = ['#3b82f6', '#8b5cf6', '#4ade80', '#f59e0b', '#ef4444', '#06b6d4']
 
 export default function Dashboard({ data, fileId, onReset }) {

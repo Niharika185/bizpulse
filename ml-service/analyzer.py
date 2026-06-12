@@ -4,25 +4,16 @@ from statsmodels.tsa.holtwinters import ExponentialSmoothing
 import warnings
 warnings.filterwarnings('ignore')
 
-def analyze_file(file_path, file_name):
-    # Load file
-    if file_name.endswith('.csv'):
-        df = pd.read_csv(file_path)
-    else:
-        df = pd.read_excel(file_path)
 
-    # Clean column names
+def _analyze_dataframe(df):
     df.columns = df.columns.str.strip()
 
-    # Basic info
     rows, cols = df.shape
     columns = list(df.columns)
 
-    # Separate numeric and text columns
     numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
     text_cols = df.select_dtypes(include=['object']).columns.tolist()
 
-    # Summary statistics
     summary = {}
     for col in numeric_cols:
         summary[col] = {
@@ -33,7 +24,6 @@ def analyze_file(file_path, file_name):
             'std': round(float(df[col].std()), 2)
         }
 
-    # Chart data — Bar chart (first text col vs first numeric col)
     bar_chart = []
     if text_cols and numeric_cols:
         group = df.groupby(text_cols[0])[numeric_cols[0]].sum().reset_index()
@@ -44,7 +34,6 @@ def analyze_file(file_path, file_name):
                 'value': round(float(row[numeric_cols[0]]), 2)
             })
 
-    # Chart data — Line chart (trend over rows)
     line_chart = []
     if numeric_cols:
         col = numeric_cols[0]
@@ -54,7 +43,6 @@ def analyze_file(file_path, file_name):
                 'value': round(float(val), 2) if not np.isnan(val) else 0
             })
 
-    # Pie chart (distribution of first text column)
     pie_chart = []
     if text_cols:
         counts = df[text_cols[0]].value_counts().head(6)
@@ -64,7 +52,6 @@ def analyze_file(file_path, file_name):
                 'value': int(count)
             })
 
-    # Anomaly detection
     anomalies = []
     if numeric_cols:
         col = numeric_cols[0]
@@ -79,7 +66,6 @@ def analyze_file(file_path, file_name):
                     'type': 'High' if val > mean else 'Low'
                 })
 
-    # Forecast (next 5 values)
     forecast = []
     if numeric_cols and len(df) >= 10:
         try:
@@ -112,3 +98,21 @@ def analyze_file(file_path, file_name):
         'anomalies': anomalies,
         'forecast': forecast
     }
+
+
+def analyze_file_obj(file_obj, file_name):
+    """Analyze a file from an in-memory file-like object (BytesIO)."""
+    if file_name.endswith('.csv'):
+        df = pd.read_csv(file_obj)
+    else:
+        df = pd.read_excel(file_obj)
+    return _analyze_dataframe(df)
+
+
+def analyze_file(file_path, file_name):
+    """Analyze a file from a disk path (kept for backward compatibility)."""
+    if file_name.endswith('.csv'):
+        df = pd.read_csv(file_path)
+    else:
+        df = pd.read_excel(file_path)
+    return _analyze_dataframe(df)

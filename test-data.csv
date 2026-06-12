@@ -1,0 +1,16 @@
+Product,Category,Sales,Revenue,Month
+Laptop,Electronics,45,67500,January
+Phone,Electronics,120,60000,January
+Shirt,Clothing,200,20000,January
+Laptop,Electronics,38,57000,February
+Phone,Electronics,150,75000,February
+Shirt,Clothing,180,18000,February
+Laptop,Electronics,60,90000,March
+Phone,Electronics,200,100000,March
+Shirt,Clothing,250,25000,March
+Laptop,Electronics,25,37500,April
+Phone,Electronics,90,45000,April
+Shirt,Clothing,300,30000,April
+Laptop,Electronics,70,105000,May
+Phone,Electronics,180,90000,May
+Shirt,Clothing,220,22000,May
